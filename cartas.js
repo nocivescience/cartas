@@ -1,8 +1,12 @@
+const overlaiesEl=document.querySelectorAll('.overlay-text');
+const gameContainerEl=document.querySelector('.game-container');
+const cardContanerEl=document.querySelector('.card-container');
 class MixOrMatch{
     constructor(cards){
         this.cardsArray=cards;
     }
-    startGame(){
-        console.log("startGame");
-    };
+
 }
+document.addEventListener('click', function() {
+    
+});
