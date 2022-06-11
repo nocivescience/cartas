@@ -5,11 +5,14 @@ const cardsEl=Array.from(document.getElementsByClassName('card'));
 const timeRemainingEl=document.getElementById('time-remaining');
 const bodyEl=document.querySelector('body');
 const flipsEl=document.getElementById('flips');
+
 class MixOrMatch{
     constructor(cards,TotalTime=100){
         this.cardsArray=cards;
         this.TotalTime=TotalTime;
         this.totalClicks=10;
+        this.cardMatched=[];
+        this.cardToCheck=null;
     }
     shuffleCards(){
         for(let i=this.cardsArray.length-1;i>0;i--){
@@ -32,19 +35,33 @@ class MixOrMatch{
     flipCard(card){
         this.totalClicks--;
         flipsEl.textContent=this.totalClicks;
+        self.checkForCardMath();
         if(this.totalClicks<=0){
             alert('You lost');
             this.totalClicks=0;
             flipsEl.textContent=this.totalClicks;
         }
     }
+    checkForCardMath(){
+        return console.log('this.cardToCheck');
+    };
+    getCardType(card){
+        return card.getElementsByClassName('card-value')[0].id;
+    };
 }
-const game=new MixOrMatch(cardsEl);
-game.shuffleCards();
-game.startCountDown();
-flipsEl.textContent=game.totalClicks;
-cardsEl.forEach(card=>{
-    card.addEventListener('click',()=>{
-        game.flipCard(card);
+function update(){
+    const game=new MixOrMatch(cardsEl);
+    game.shuffleCards();
+    game.startCountDown();
+    flipsEl.textContent=game.totalClicks;
+    cardsEl.forEach(card=>{
+        card.addEventListener('click',()=>{
+            game.flipCard(card);
+        })
     })
-})
+}
+if(document.readyState=='loading'){
+    document.addEventListener('DOMContentLoaded',update)
+}else{
+    update()
+};
