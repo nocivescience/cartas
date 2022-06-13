@@ -9,7 +9,7 @@ const flipsEl=document.getElementById('flips');
 class MixOrMatch{
     constructor(cards,TotalTime=100){
         this.cardsArray=cards;
-        this.TotalTime=TotalTime;
+        this.TotalTime=TotalTime; 
         this.totalClicks=10;
         this.cardMatched=[];
         this.cardToCheck=null;
