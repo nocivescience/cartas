@@ -1,67 +1,67 @@
-const overlaiesEl=document.querySelectorAll('.overlay-text');
-const gameContainerEl=document.querySelector('.game-container');
-const cardContanerEl=document.querySelector('.card-container');
-const cardsEl=Array.from(document.getElementsByClassName('card'));
-const timeRemainingEl=document.getElementById('time-remaining');
-const bodyEl=document.querySelector('body');
-const flipsEl=document.getElementById('flips');
-
 class MixOrMatch{
-    constructor(cards,TotalTime=100){
-        this.cardsArray=cards;
-        this.TotalTime=TotalTime; 
-        this.totalClicks=10;
-        this.cardMatched=[];
-        this.cardToCheck=null;
+    constructor(totalTime, cards) {
+        this.cardsArray = cards;
+        this.totalTime = totalTime;
     }
-    shuffleCards(){
-        for(let i=this.cardsArray.length-1;i>0;i--){
-            const randomIndex=Math.floor(Math.random()*(i+1));
-            [this.cardsArray[i],this.cardsArray[randomIndex]]=[this.cardsArray[randomIndex],this.cardsArray[i]];
-        }
-        this.cardsArray=this.cardsArray.map((card,index)=>{
-            card.style.order=index;
+    startGame() {
+        this.totalClicks = 0;
+        this.timeRemaining = this.totalTime;
+        this.cardToCheck = null;
+        this.matchedCards = [];
+        this.busy = true;
+        setTimeout(() => {
+            this.busy = false;        
+            this.shuffleCards(this.cardsArray);
+        }, 1000);
+    }
+    shuffleCards(cardsArray) {
+        for(let i=0; i<this.cardsArray.length-1; i--) {
+            let randomIndex=Math.floor(Math.random()*(i+1));
+            [cardsArray[i], cardsArray[randomIndex]] = [cardsArray[randomIndex], cardsArray[i]];
+        };
+        cardsArray=cardsArray.map((card,index) => {
+            card.style.order = index;
         })
-    }
-    startCountDown(){
-        setInterval(()=>{
-            this.TotalTime--;
-            timeRemainingEl.textContent=this.TotalTime;
-            if(this.TotalTime<0){
-                timeRemainingEl.textContent='0';
-            }
-        },100);
-    }
-    flipCard(card){
-        this.totalClicks--;
-        flipsEl.textContent=this.totalClicks;
-        self.checkForCardMath();
-        if(this.totalClicks<=0){
-            alert('You lost');
-            this.totalClicks=0;
-            flipsEl.textContent=this.totalClicks;
-        }
-    }
-    checkForCardMath(){
-        return console.log('this.cardToCheck');
     };
-    getCardType(card){
+    flipCard(card) {
+        this.checkForCardMatch(card);
+    }
+    checkForCardMatch(card) {
+        if(this.getCardType(card) === this.getCardType(this.cardToCheck))
+            this.cardMatch(card, this.cardToCheck);
+        else 
+            this.cardMismatch(card, this.cardToCheck);
+
+        this.cardToCheck = null;
+    };
+    cardMatch(card1, card2) {
+        this.matchedCards.push(card1);
+        this.matchedCards.push(card2);
+        if(this.matchedCards.length===this.cardsArray.length){
+            console.log('victory');
+        }
+    };
+    cardMismatch(card1, card2) {
+        this.busy = true;
+        setTimeout(() => {
+            this.busy = false;
+            console.log(card1, card2);
+        });
+    };
+    getCardType(card) {
         return card.getElementsByClassName('card-value')[0].id;
+    };
+    canFlipCard(card) {
+        return !this.busy && !this.matchedCards.includes(card) && card !== this.cardToCheck;
     };
 }
 function update(){
-    const game=new MixOrMatch(cardsEl);
-    game.shuffleCards();
-    game.startCountDown();
-    flipsEl.textContent=game.totalClicks;
-    cardsEl.forEach(card=>{
-        card.addEventListener('click',()=>{
-            game.flipCard(card);
-        })
-    })
+    const cards=Array.from(document.querySelectorAll('.card'));
+    const gamesEl= new MixOrMatch(10, cards);
+    cards.forEach(card => {
+        card.addEventListener('click', event => {
+            gamesEl.flipCard(card);
+        });
+    });
 }
-if(document.readyState=='loading'){
-    document.addEventListener('DOMContentLoaded',update)
-}else{
-    update()
-};
+update();
