@@ -65,10 +65,10 @@ svg{
     width: 90%;
     height: 90%;
 }
-.card .card-back{
+.card:active .card-back{
     transform:  perspective(600px) rotateY(180deg);
 }
-.card .card-front{
+.card:active .card-front{
     transform:  perspective(600px) rotateY(0deg);
 }
 .game-info{
