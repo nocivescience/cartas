@@ -31,15 +31,15 @@ class MixOrMatch {
     };
     gameOver() {
         clearInterval(this.countdown);
-        document.getElementById('game-over-text').classList.add('visible');
+        document.getElementById('game-over-text').classList.add('active');
     };
     victory() {
         clearInterval(this.countdown);
-        document.getElementById('victory-text').classList.add('visible');
+        document.getElementById('victory-text').classList.add('active');
     };
     hideCards() {
         this.cardsArray.forEach(card => {
-            card.classList.remove('visible');
+            card.classList.remove('active');
             card.classList.remove('matched');
         });
     };
@@ -47,7 +47,7 @@ class MixOrMatch {
         if(this.canFlipCard(card)) {
             this.totalClicks++;
             this.ticker.innerText = this.totalClicks;
-            card.classList.add('visible');
+            card.classList.add('active');
 
             if(this.cardToCheck) {
                 this.checkForCardMatch(card);
@@ -74,8 +74,8 @@ class MixOrMatch {
     cardMismatch(card1, card2) {
         this.busy = true;
         setTimeout(() => {
-            card1.classList.remove('visible');
-            card2.classList.remove('visible');
+            card1.classList.remove('active');
+            card2.classList.remove('active');
             this.busy = false;
         });
     };
@@ -97,12 +97,12 @@ class MixOrMatch {
     };
 };
 function ready(){
-    let overlay=document.getElementsByClassName('game-info');
-    let cards = document.getElementsByClassName('card');
-    let game = new MixOrMatch(60, cards);
+    const overlay=Array.from(document.getElementsByClassName('overlay-text'));
+    const cards = Array.from(document.getElementsByClassName('card'));
+    const game = new MixOrMatch(60, cards);
     overlay.forEach(element => {
         element.addEventListener('click', () => {
-            overlay.classList.remove('visible');
+            overlay.classList.remove('active');
             game.startGame();
         });
     });
