@@ -4,111 +4,128 @@
     font-family: 'VT323', monospace;
     color: aqua;
 }
+html{
+    min-height: 100vh;
+    cursor: url("https://raw.githubusercontent.com/WebDevSimplified/Mix-Or-Match/master/Assets/Cursors/Ghost.cur"), auto;
+}
 body{
+    margin: 0;
     background: radial-gradient(#00939d, #002a3d);
 }
-.game-container{
-    display:flex;
-    flex-direction:column;
-    width:100vw;
-    height:100vh;
-    align-items:center;
-    justify-content:center;
-}
-.card-container{
-    width: 100vw;
-    height: 100vh;
-    display:grid;
-    grid-template-columns: repeat(6, 1fr);
-    row-gap: 20px;
-    padding: 30px;
-}
-.card{
-    width: 125px;
-    height: 175px;
-    position: relative;
-    background-color: rgba(255, 255, 255, 0);
-    border: 1px solid rgba(0, 0, 0, 0);
-}
-.card .card-back{
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    background: black;
-    color: rgb(250, 150, 0);
-    border: 2px solid rgb(250, 150, 0);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    transition: transform .6s;
-    transform:  perspective(600px) rotateY(0deg);
-    position: absolute;
-}
-.card .card-front{
-    width: 100%;
-    height: 100%;
-    background-color: rgb(75, 75, 75);
-    border-radius: 10px;
-    color: rgb(0, 0, 0);
-    border: 2px solid rgb(250, 150, 0);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    transition: transform .6s;
-    transform:  perspective(600px) rotateY(-180deg);
-    position: absolute;
-    backface-visibility: hidden;
-}
-svg{
-    width: 90%;
-    height: 90%;
-}
-.card:active .card-back{
-    transform:  perspective(600px) rotateY(180deg);
-}
-.card:active .card-front{
-    transform:  perspective(600px) rotateY(0deg);
-}
-.game-info{
-    font-size: 2em;
+.page-title{
+    color: #FF6D00;
+    font-family: 'Gloria Hallelujah';
+    font-weight: normal;
+    text-align: center;
+    font-size: 6em;
+    padding: 0;
+    margin:  0 auto;
 }
 .game-info-container{
-    display:flex;
-    flex-direction:row;
-    justify-content:space-around;
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+}
+.game-info{
+    font-family: 'Gloria Hallelujah';
+    color: #FFBB89;
+    font-size: 4em;
+}
+.game-container{
+    display: grid;
+    grid-template-columns: repeat(6, auto);
+    grid-gap: 10px;
+    margin: 20px;
+    justify-content: center;
+    perspective: 500px;
+    font-family: 'VT323', monospace;
+}
+.card{
+    position: relative;
+    height: 175px;
+    width: 125px;
+}
+.card:hover{
+    cursor: url("https://raw.githubusercontent.com/WebDevSimplified/Mix-Or-Match/master/Assets/Cursors/GhostHover.cur"), auto;
+}
+.card-face{
+    position: absolute;
     width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backface-visibility: hidden;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid #FFBB89;
+    animation: transform 0.5s ease-in-out;
 }
-.plus-hard{
-    filter: blur(10px);
+.card.visible .card-back{
+    transform: rotateY(-180deg);
 }
-.card-matched .card-value{
+.card.visible .card-front{
+    transform: rotateY(0deg);
+}
+.card.matched .card-value{
     animation: dance 1s linear infinite 500ms;
 }
-@keyframes dance{
-    0%,100% {
-        transform: rotateZ(0deg);
-    }
-    25%{
-        transform: rotateZ(-30deg);
-    }
-    75%{
-        transform: rotateZ(30deg);
-    }
+.overlay-text{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    color: #ff6d00;
+    font-family: 'VT323', monospace;
 }
-.overlay-text.active{
+.overlay-text-small{
+    font-size: 3em;
+}
+.overlay-text.visible{
     display: flex;
     flex-direction: column;
-    animation: overlay-grow 500ms forwards;
+    animation: overlay-grow 1s ease-in-out;
 }
 @keyframes overlay-grow{
-    from {
-        background-color: rgba(0, 0, 0, 0);
+    from{
+        background-color: #002a3d00;
         font-size: 0;
     }
-    to {
-        background-color: rgba(0, 0, 0, .8);
+    to{
+        background-color: #002a3d;
         font-size: 10em;
     }
+}
+@keyframes dance{
+    0%, 100%{
+        transform: rotate(0deg);
+    }
+    25%{
+        transform: rotate(30deg);
+    }
+    75%{
+        transform: rotate(-30deg);
+    }
+}
+.card-back{
+    background-color: #002a3d;
+    border-color: #ff6d00;
+}
+.card-front{
+    background-color: #ff6d00;
+    border-color: #002a3d;
+    transform: rotateY(180deg);
+}
+.card-value{
+    transition: transform 0.5s ease-in-out;
+    transform: scale(1);
+}
+.game-info-container{
+    display: flex;
+    align-items: center;
 }

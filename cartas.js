@@ -102,7 +102,7 @@ function ready(){
     const game = new MixOrMatch(60, cards);
     overlay.forEach(element => {
         element.addEventListener('click', () => {
-            overlay.classList.remove('active');
+            element.classList.remove('active');
             game.startGame();
         });
     });
