@@ -45,14 +45,16 @@ class MixOrMatch{
             this.totalClicks++;
             this.ticker.innerHTML = this.totalClicks;
             carta.classList.add('visible');
-            if(this.cardToCheck == null){
+            if(this.cardToCheck){
                 this.checkForCardMatch(carta);
-            };
+            }else{
+                this.cardToCheck = carta;
+            }
         }
     };
     checkForCardMatch(carta){
         if(this.getCardType(carta) === this.getCardType(this.cardToCheck)){
-            this.checkForCardMatch(card,this.cardToCheck)
+            this.cardMatch(card,this.cardToCheck)
         }else{
             this.cardMisMatch(carta,this.cardToCheck);
         }
