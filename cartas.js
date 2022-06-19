@@ -12,43 +12,70 @@ class MixOrMatch{
         this.cardToCheck = null;
         this.matchedCards = [];
         this.busy = true;
-
-            this.countdown = this.startCountdown();
+        setTimeout(() => {
+            this.shuffleCards(this.cardsArray);
             this.busy = false;
-     
-        this.hideCards();
+        }, 500)
         this.timer.innerText = this.timeRemaining;
         this.ticker.innerText = this.totalClicks;
+    }
+    shuffleCards(cardsArray) {
+        for(let i = cardsArray.length - 1; i > 0; i--) {
+            let randomIndex = Math.floor(Math.random() * (i + 1));
+            let itemAtIndex = cardsArray[randomIndex];
+            cardsArray[randomIndex] = cardsArray[i];
+            cardsArray[i] = itemAtIndex;
+        }
     };
-    startCountdown() {
-        return setInterval(() => {
-            this.timeRemaining--;
-            this.timer.innerText = this.timeRemaining;
-            document.getElementById(
-                'game-over-text'
-            ).classList.add('visible');
-        },1000);
+    flipCard(card) {
+        card.classList.add('visible');
+        this.totalClicks++;
+        this.ticker.innerText = this.totalClicks;
+        if(this.cardToCheck) {
+            this.checkForCardMatch(card);
+        } else {
+            this.cardToCheck = card;
+        };
+    }
+    checkForCardMatch(card) {
+        if(this.getTypeCard(card) === this.getTypeCard(this.cardToCheck)) {
+            alert('match');
+        }else{
+            alert('no match');
+        }
+        this.cardToCheck = null;
     };
-    hideCards() {
-        this.cardsArray.forEach(card => {
-            card.classList.remove('visible');
-            card.classList.remove('matched');
-        });
+    cardMatch(card1,card2){
+        this.matchedCards.push(card1);
+        this.matchedCards.push(card2);
+        card1.classList.add('matched');
+        card2.classList.add('matched');
+        if(this.matchedCards.length === this.cardsArray.length) {
+            alert('You found them all!');
+        }
+    }
+    getTypeCard(card) {
+        return card.getElementsByClassName('card-value')[0].id;
     };
 }
-// if(document.readyState === 'loading') {
-//     document.addEventListener('DOMContentLoaded', ready);
-// }else {
-//     ready();
-// };
-function ready() {
-    const overlays=document.querySelectorAll('.overlay-text');
-    const gamesEl=new MixOrMatch(30,overlays);
-    overlays.forEach(overlay=>{
-        overlay.addEventListener('click',function(){
+function ready(){
+    const cards= Array.from(document.querySelectorAll('.card'));
+    const overlays = Array.from(document.querySelectorAll('.overlay-text'));
+    const game = new MixOrMatch(60, cards);
+    overlays.forEach(overlay => {
+        overlay.addEventListener('click', () => {
             overlay.classList.remove('visible');
-            gamesEl.startGame();
-        })
+            game.startGame();
+        });
     });
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            game.flipCard(card);
+        });
+    });
+};
+if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', ready);
+}else{
+    ready();
 }
-ready();
