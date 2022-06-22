@@ -2,7 +2,6 @@ class MixOrMatch{
     constructor(totalTime,cards){
         this.totalTime=totalTime;
         this.cards=cards;
-        this.busy=true;
         this.timer=document.getElementById('time-remaining');
         this.ticker=document.getElementById('flips')
         this.matched=false;
@@ -16,31 +15,42 @@ class MixOrMatch{
             card.classList.remove('matched');
         })
     }
-    checkCardMatch(card){
-        console.log(this.getCardType(card))
-    }
-    getCardType(card){
-        return card.getElementsByClassName('card-value')[0].id;
-    }
     runningGame(){
-        this.startCountDown()
+        this.busy=true;
+        return setTimeout(()=>{
+            this.startCountDown();
+            this.busy=false;
+        })
     }
     startCountDown(){
-        return setInterval(()=>{
-            console.log(this.totalTime--)
-            this.timer.innerText=this.totalTime;
-        },1000)
+        console.log(this.totalTime--)
+        this.timer.innerText=this.totalTime;
     }
     flipCard(card){
-        if(this.canFlipCard(card)){
-            card.classList.add('visible')
+        if(!this.busy&&!this.matchedCards.includes(card)&&card!==this.cardToCheck){
             this.totalFlips++
             this.ticker.textContent=this.totalFlips;
+            card.classList.add('visible');
+            if(this.cardToCheck){
+                if(card.getElementsByClassName('card-value')[0].id===this.cardToCheck.getElementsByClassName('card-value')[0].id){
+                    this.matchedCards.push(card);
+                    this.matchedCards.push(this.cardToCheck);
+                    card.classList.add('matched');
+                    this.cardToCheck.classList.add('matched');
+                }else{
+                    this.busy=true
+                    setTimeout(()=>{
+                        card.classList.remove('visible');
+                        this.cardToCheck.classList.remove('visible');
+                        this.busy=false
+                    },1000)
+                }
+                this.cardToCheck=null
+            }else{
+                this.cardToCheck=card
+            }
         }
     };
-    canFlipCard(card){
-        return this.busy
-    }
 }
 function ready(){
     const cards=Array.from(document.getElementsByClassName('card'))
@@ -55,7 +65,6 @@ function ready(){
     cards.forEach(card=>{
         card.addEventListener('click',()=>{
             games.flipCard(card)
-            games.checkCardMatch(card)
         })
     })
 }
